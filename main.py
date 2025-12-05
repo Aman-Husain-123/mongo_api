@@ -48,4 +48,26 @@ async def show_euron_data():
     async for document in cursor:
         iterms.append(euron_helper(document))
     return iterms
+
+
+@app.put('/euron/update/{record_id}')
+async def update_euron_data(record_id:str,update_data:eurondata):
+    result = await euron_data.update_one(
+        {"_id":ObjectId(record_id)},
+        {"$set":update_data.dict()}
+    )
     
+    if result.modified_count == 1:
+        raise HTTPException(status_code=404,detail = "Record not found or no changes made")
+
+    return {"message":"Record updated successfully"}
+
+
+@app.delete("/euron/delete/{record_id}")
+async def delete_euron_data(record_id: str):
+    result = await euron_data.delete_one({"_id": ObjectId(record_id)})
+
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Record not found")
+
+    return {"message": "Record deleted successfully"}
