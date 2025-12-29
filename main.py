@@ -50,7 +50,7 @@ async def show_euron_data():
     return iterms
 
 
-@app.put('/euron/update/{record_id}')
+@app.post('/euron/update/{record_id}')
 async def update_euron_data(record_id:str,update_data:eurondata):
     result = await euron_data.update_one(
         {"_id":ObjectId(record_id)},
